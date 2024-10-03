@@ -39,6 +39,11 @@ def main():
     name_snake_case = snake_case_regex.sub("_", prefiltered_name).lower()
     file_path = os.path.normpath(os.path.join(args.path, f"test_{name_snake_case}.h"))
 
+    # Check if args.path exists
+    # Create directories if not
+    if not os.path.exists(args.path):
+        os.makedirs(args.path)
+
     print(file_path)
     if os.path.isfile(file_path):
         print(f'ERROR: The file "{file_path}" already exists.')
