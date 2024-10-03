@@ -41,6 +41,12 @@ TEST_CASE("[Audio][AudioStreamInteractive] Getters and setters") {
 
 	stream->set_clip_count(2);
 	CHECK(stream->get_clip_count() == 2);
+
+	stream->set_initial_clip(1);
+	CHECK(stream->get_initial_clip() == 1);
+
+	stream->set_clip_name(0, StringName("Foo"));
+	CHECK(stream->get_clip_name(0) == StringName("Foo"));
 }
 
 } // namespace TestAudioStreamInteractive
