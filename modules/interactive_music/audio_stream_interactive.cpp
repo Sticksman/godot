@@ -246,7 +246,7 @@ PackedInt32Array AudioStreamInteractive::get_transition_list() const {
 	return ret;
 }
 
-void AudioStreamInteractive::add_transition(int p_from_clip, int p_to_clip, TransitionFromTime p_from_time, TransitionToTime p_to_time, FadeMode p_fade_mode, float p_fade_beats, bool p_use_filler_flip, int p_filler_clip, bool p_hold_previous) {
+void AudioStreamInteractive::add_transition(int p_from_clip, int p_to_clip, TransitionFromTime p_from_time, TransitionToTime p_to_time, FadeMode p_fade_mode, float p_fade_beats, bool p_use_filler_clip, int p_filler_clip, bool p_hold_previous) {
 	ERR_FAIL_COND(p_from_clip < CLIP_ANY || p_from_clip >= clip_count);
 	ERR_FAIL_COND(p_to_clip < CLIP_ANY || p_to_clip >= clip_count);
 	ERR_FAIL_UNSIGNED_INDEX(p_from_time, TRANSITION_FROM_TIME_MAX);
@@ -258,7 +258,7 @@ void AudioStreamInteractive::add_transition(int p_from_clip, int p_to_clip, Tran
 	tr.to_time = p_to_time;
 	tr.fade_mode = p_fade_mode;
 	tr.fade_beats = p_fade_beats;
-	tr.use_filler_clip = p_use_filler_flip;
+	tr.use_filler_clip = p_use_filler_clip;
 	tr.filler_clip = p_filler_clip;
 	tr.hold_previous = p_hold_previous;
 

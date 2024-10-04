@@ -166,7 +166,7 @@ public:
 
 	// TRANSITIONS
 
-	void add_transition(int p_from_clip, int p_to_clip, TransitionFromTime p_from_time, TransitionToTime p_to_time, FadeMode p_fade_mode, float p_fade_beats, bool p_use_filler_flip = false, int p_filler_clip = -1, bool p_hold_previous = false);
+	void add_transition(int p_from_clip, int p_to_clip, TransitionFromTime p_from_time, TransitionToTime p_to_time, FadeMode p_fade_mode, float p_fade_beats, bool p_use_filler_clip = false, int p_filler_clip = -1, bool p_hold_previous = false);
 	TransitionFromTime get_transition_from_time(int p_from_clip, int p_to_clip) const;
 	TransitionToTime get_transition_to_time(int p_from_clip, int p_to_clip) const;
 	FadeMode get_transition_fade_mode(int p_from_clip, int p_to_clip) const;
