@@ -31,6 +31,7 @@
 #ifndef TEST_AUDIO_STREAM_INTERACTIVE_H
 #define TEST_AUDIO_STREAM_INTERACTIVE_H
 
+#include "../../servers/audio/audio_stream.h"
 #include "../audio_stream_interactive.h"
 #include "tests/test_macros.h"
 
@@ -47,8 +48,67 @@ TEST_CASE("[Audio][AudioStreamInteractive] Getters and setters") {
 
 	stream->set_clip_name(0, StringName("Foo"));
 	CHECK(stream->get_clip_name(0) == StringName("Foo"));
+
+	stream->set_clip_auto_advance(0, AudioStreamInteractive::AUTO_ADVANCE_ENABLED);
+	CHECK(stream->get_clip_auto_advance(0) == AudioStreamInteractive::AUTO_ADVANCE_ENABLED);
+
+	Ref<AudioStream> a = memnew(AudioStream);
+	stream->set_clip_stream(1, a);
+	CHECK(stream->get_clip_stream(1) == a);
+
+	CHECK(stream->get_stream_name() == "Transitioner");
+}
+
+TEST_CASE("[Audio][AudioStreamInteractive] Test transition") {
+	Ref<AudioStreamInteractive> stream = memnew(AudioStreamInteractive);
+
+	stream->set_clip_count(3);
+	stream->set_initial_clip(0);
+
+	stream->add_transition(
+			0, 1,
+			AudioStreamInteractive::TRANSITION_FROM_TIME_IMMEDIATE,
+			AudioStreamInteractive::TRANSITION_TO_TIME_START,
+			AudioStreamInteractive::FADE_CROSS,
+			2.0);
+	CHECK(stream->has_transition(0, 1) == true);
+	CHECK(stream->has_transition(1, 2) == false);
+
+	CHECK(stream->get_transition_from_time(0, 1) == AudioStreamInteractive::TRANSITION_FROM_TIME_IMMEDIATE);
+	CHECK(stream->get_transition_to_time(0, 1) == AudioStreamInteractive::TRANSITION_TO_TIME_START);
+	CHECK(stream->get_transition_fade_mode(0, 1) == AudioStreamInteractive::FADE_CROSS);
+	CHECK(stream->get_transition_fade_beats(0, 1) == 2.0);
+	CHECK(stream->is_transition_using_filler_clip(0, 1) == false);
+	CHECK(stream->get_transition_filler_clip(0, 1) == -1);
+	CHECK(stream->is_transition_holding_previous(0, 1) == false);
+
+	stream->erase_transition(0, 1);
+	CHECK(stream->has_transition(0, 1) == false);
+	CHECK(stream->has_transition(1, 2) == false);
 }
 
 } // namespace TestAudioStreamInteractive
+
+namespace TestAudioStreamPlaybackInteractive {
+
+TEST_CASE("[Audio][AudioStreamPlaybackInteractive] Start and Stop") {
+	Ref<AudioStreamInteractive> stream = memnew(AudioStreamInteractive);
+	stream->set_clip_count(1);
+	CHECK(stream->get_clip_count() == 1);
+
+	Ref<AudioStream> a = memnew(AudioStream);
+	stream->set_clip_stream(0, a);
+
+	Ref<AudioStreamPlaybackInteractive> playback = stream->instantiate_playback();
+	/* TODO: Figure out how to get the audio stream to return true here
+	 * Unclear if an actual audiostream is needed to get start and stop to work
+	playback->start();
+	CHECK(playback->is_playing() == true);
+	playback->stop();
+	CHECK(playback->is_playing() == false);
+	*/
+}
+
+} // namespace TestAudioStreamPlaybackInteractive
 
 #endif // TEST_AUDIO_STREAM_INTERACTIVE_H
